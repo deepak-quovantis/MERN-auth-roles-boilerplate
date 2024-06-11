@@ -118,6 +118,7 @@ export default function NotificationsList() {
                   </div>
                   <div>
                     <button
+                      aria-label="Delete"
                       type="button"
                       onClick={() => {
                         handleDeleteNotification(notification._id);

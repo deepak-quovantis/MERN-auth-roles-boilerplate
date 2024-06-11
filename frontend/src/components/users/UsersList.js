@@ -79,10 +79,16 @@ export default function UsersList() {
                   </span>
                 </div>
                 <div>
-                  <button type="button" onClick={() => handleDeleteUser(user._id)}>
+                  <button
+                    aria-label="Delete"
+                    type="button"
+                    onClick={() => handleDeleteUser(user._id)}>
                     <MdDeleteOutline />
                   </button>
-                  <button type="button" onClick={() => navigate(`/dash/users/${user._id}`)}>
+                  <button
+                    aria-label="Navigate"
+                    type="button"
+                    onClick={() => navigate(`/dash/users/${user._id}`)}>
                     <MdBorderColor />
                   </button>
                 </div>

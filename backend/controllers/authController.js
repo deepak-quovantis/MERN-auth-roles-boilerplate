@@ -15,9 +15,12 @@ const login = async (req, res) => {
   if (!foundUser || !foundUser.active) {
     res.status(401).json({ message: 'Unauthorized r24157' });
   }
+
+  //const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(password, foundUser.password);
   const matchPassword = await bcrypt.compare(password, foundUser.password);
   if (!matchPassword) {
-    res.status(401).json({ message: 'Unauthorized r97452' });
+    res.status(401).json({ message: "Password Doesn't Match" });
   }
   const accessToken = jwt.sign(
     {
@@ -29,7 +32,7 @@ const login = async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: '30s' }
+    { expiresIn: '7d' }
   );
   const refreshToken = jwt.sign(
     {
@@ -75,35 +78,31 @@ const refresh = async (req, res) => {
   }
 
   const refreshToken = cookies.jwt;
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    async (err, decoded) => {
-      if (err) {
-        return res.status(403).json({ message: 'Forbidden r74690' });
-      }
-      const foundUser = await User.findOne({
-        username: decoded.UserInfo.username,
-      }).exec();
-      if (!foundUser) {
-        return res.status(401).json({ message: 'Unauthorized r68457' });
-      }
-      const accessToken = jwt.sign(
-        {
-          UserInfo: {
-            username: foundUser.username,
-            id: foundUser._id,
-            roles: foundUser.roles,
-            profileImage: foundUser.profileImage,
-          },
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '7d' }
-      );
-      //Send accessToken with username and roles
-      res.json({ accessToken });
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Forbidden r74690' });
     }
-  );
+    const foundUser = await User.findOne({
+      username: decoded.UserInfo.username,
+    }).exec();
+    if (!foundUser) {
+      return res.status(401).json({ message: 'Unauthorized r68457' });
+    }
+    const accessToken = jwt.sign(
+      {
+        UserInfo: {
+          username: foundUser.username,
+          id: foundUser._id,
+          roles: foundUser.roles,
+          profileImage: foundUser.profileImage,
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
+    //Send accessToken with username and roles
+    res.json({ accessToken });
+  });
 };
 
 // @desc Logout

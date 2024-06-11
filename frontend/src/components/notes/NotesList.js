@@ -79,11 +79,17 @@ export default function NotesList() {
                   </div>
                   <div>
                     {/* eslint-disable-next-line no-underscore-dangle */}
-                    <button type="button" onClick={() => handleDeleteNote(note._id)}>
+                    <button
+                      aria-label="Delete"
+                      type="button"
+                      onClick={() => handleDeleteNote(note._id)}>
                       <MdDeleteOutline />
                     </button>
                     {/* eslint-disable-next-line no-underscore-dangle */}
-                    <button type="button" onClick={() => navigate(`/dash/notes/${note._id}`)}>
+                    <button
+                      aria-label="navigate"
+                      type="button"
+                      onClick={() => navigate(`/dash/notes/${note._id}`)}>
                       <MdBorderColor />
                     </button>
                   </div>
